@@ -163,7 +163,7 @@ public class Kmeans {
 			int classCount = classes.size();
 			System.out.printf("Train stats: %d instances, %d attributes, %d classes\n", instances.size(), instances.get(0).attributes.length, classCount);
 			
-			for(DistanceMetric metric : metrics) 
+			for(DistanceMetric metric : metrics)
 				for(int k = 1; k++; k <= 3)
 					runKmeans(instances, k*classCount, metric);
 			
@@ -177,7 +177,20 @@ public class Kmeans {
 	}
 
 	static void runKmeans(ArrayList<Record> instances, int k, DistanceMetric metric) {
-	
+		boolean centroids_different = true;
+		
+		while(centroids_same) {
+			for(int i = 0; i < k; i++) {
+				
+			}
+			
+			//recalculate and keep checking if centroids are the same
+			for every cluster {
+			calculate centroid  (assign to C)
+			if C==L (centroids_different = false)
+			L = C;
+			}
+		}
 	}
 
 	//Loop through the data series and print them out in csv form.

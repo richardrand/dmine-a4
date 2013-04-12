@@ -178,6 +178,25 @@ public class Kmeans {
 
 	static void runKmeans(ArrayList<Record> instances, int k, DistanceMetric metric) {
 	
+		int rand = 0;
+		Record randomSelection;
+		
+		//we will be able to treat the centroids as records
+		ArrayList<Record> centroids = new ArrayList<Record>();
+		
+		//creates k centroids
+		for (int i = 0; i < k; i++){
+			//pick a random index, has to be inside of the array
+			while(rand >= instances.size()){
+				rand = (int)(Math.random() * 100.0);
+			}
+			//choosing initial centroids from data might not be smart, but I think it's the only way
+			//since we don't know what the attributes look like
+			randomSelection = instances.get(rand);
+			
+		}
+	
+		
 	}
 
 	//Loop through the data series and print them out in csv form.

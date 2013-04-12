@@ -178,9 +178,12 @@ public class Kmeans {
 
 	static void runKmeans(ArrayList<Record> instances, int k, DistanceMetric metric) {
 	
+		//I'm writing a lot that I feel is redundant
+		//might be smarter to write a method that does the clustering 
+		//and just do the initial clustering here and then run the reclustering method
+		
 		int rand = 0;
 		Record randomSelection;
-		
 		
 		//we will be able to treat the centroids as records
 		ArrayList<Record> centroids = new ArrayList<Record>();
@@ -188,7 +191,10 @@ public class Kmeans {
 		//this will hold an instance's distances to each centroid
 		ArrayList<Double> thisInstanceDist = new ArrayList<Double>();
 		
-		//creates k centroids
+		//this will hold all of the clusters
+		ArrayList<ArrayList> clusters = new ArrayList<ArrayList>();
+		
+		//creates k initial centroids
 		for (int i = 0; i < k; i++){
 			//pick a random index, has to be inside of the array
 			while(rand >= instances.size()){
@@ -197,12 +203,23 @@ public class Kmeans {
 			//choosing initial centroids from data might not be smart, but I think it's the only way
 			//since we don't know what the attributes look like
 			randomSelection = instances.get(rand);
+			
+			//adds the selection to the list of centroids
 			centroids.add(randomSelection);
+			
+			//adds a new cluster to the list of clusters
+			clusters.add(new ArrayList<Record>());
+			
+			//adds the centroid to that cluster
+			clusters.get(0).add(randomSelection);
 		}
 		
+		//this is the actual kmeans algorithm
+		//runs while centroids are changing
 		
-		for (Record r : instances){
-			
+		boolean centroids_keep_changing;
+		while(centroids_keep_changing){
+		
 		}
 	
 		

@@ -164,7 +164,7 @@ public class Kmeans {
 			System.out.printf("Train stats: %d instances, %d attributes, %d classes\n", instances.size(), instances.get(0).attributes.length, classCount);
 			
 			for(DistanceMetric metric : metrics) 
-				for(int k = 1; k++; k <= 3)
+				for(int k = 1; k <= 3; k++)
 					runKmeans(instances, k*classCount, metric);
 			
 			//Print tables to stdout
@@ -216,13 +216,21 @@ public class Kmeans {
 		
 		//this is the actual kmeans algorithm
 		//runs while centroids are changing
-		
-		boolean centroids_keep_changing;
+		//checks if all old centroids are same as new centroids, if so false
+		//will run once more
+		//for each instance, measures distances to each centroid
+		//chooses closest centroid and adds the instance to that cluster
+		//stores old centroids in an ArrayList
+		//creates new centroids by some sort of means measure
+		//reiterate
+		boolean centroids_keep_changing = true;
 		while(centroids_keep_changing){
 		
 		}
 	
-		
+		//what is this supposed to accomplish?
+		//it clusters the instances based on kmeans
+		//but what?
 		
 	}
 

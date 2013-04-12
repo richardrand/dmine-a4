@@ -181,8 +181,12 @@ public class Kmeans {
 		int rand = 0;
 		Record randomSelection;
 		
+		
 		//we will be able to treat the centroids as records
 		ArrayList<Record> centroids = new ArrayList<Record>();
+		
+		//this will hold an instance's distances to each centroid
+		ArrayList<Double> thisInstanceDist = new ArrayList<Double>();
 		
 		//creates k centroids
 		for (int i = 0; i < k; i++){
@@ -193,9 +197,15 @@ public class Kmeans {
 			//choosing initial centroids from data might not be smart, but I think it's the only way
 			//since we don't know what the attributes look like
 			randomSelection = instances.get(rand);
+			centroids.add(randomSelection);
+		}
+		
+		
+		for (Record r : instances){
 			
 		}
 	
+		
 		
 	}
 

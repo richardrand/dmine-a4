@@ -31,6 +31,10 @@ class Record {
 		assert(attributes.length == fields.length - 1);
 	}
 	
+	public Record(int numAttributes) {
+		attributes = new double[numAttributes];
+	}
+
 	//Used for debugging.
 	public String toString() {
 		String result = "";
@@ -165,12 +169,9 @@ public class Kmeans {
 			System.out.printf("Train stats: %d instances, %d attributes, %d classes\n", instances.size(), instances.get(0).attributes.length, classCount);
 			
 			for(DistanceMetric metric : metrics) 
-				for(int k = 1; k <= 3; k++)
+				for(int k = 1; k <= 1; k++)
 					runKmeans(instances, k*classCount, metric);
-			
-			//Print tables to stdout
-			printTables();
-			
+
 		} catch (FileNotFoundException e) {
 			System.err.println("File not found");
 			System.exit(EX_NOINPUT);
@@ -178,7 +179,7 @@ public class Kmeans {
 	}
 
 	static void runKmeans(ArrayList<Record> instances, int k, DistanceMetric metric) {
-	
+		System.out.println("ghfthfyh");
 		//I'm writing a lot that I feel is redundant
 		//might be smarter to write a method that does the clustering 
 		//and just do the initial clustering here and then run the reclustering method
@@ -193,7 +194,7 @@ public class Kmeans {
 		double[] thisInstanceDist = new double[k];
 		
 		//this will hold all of the clusters
-		ArrayList<Record>[] clusters = new ArrayList<Record>[k];
+		ArrayList<Record>[] clusters = (ArrayList<Record>[])new ArrayList[k];
 		
 		Random rnd = new Random();
 		//creates k initial centroids
@@ -205,11 +206,11 @@ public class Kmeans {
 			//since we don't know what the attributes look like
 			//--actually i think that's how kmeans is normally done anyway
 			randomSelection = instances.get(rand);
-			
+			System.out.println(randomSelection);
 			//adds the selection to the list of centroids
-			centroids[k] = randomSelection;
+			centroids[i] = randomSelection;
 			//adds a new cluster to the list of clusters
-			clusters[k] = new ArrayList<Record>();
+			clusters[i] = new ArrayList<Record>();
 			//adds the centroid to that cluster
 			//the following step will be done automatically  in the kmeans loop
 			//clusters.get(i).add(randomSelection);
@@ -226,6 +227,9 @@ public class Kmeans {
 		//reiterate
 		boolean centroids_keep_changing = true;
 		while(centroids_keep_changing) {
+			System.out.println("go");
+			centroids_keep_changing = false; //assume centroids haven't changed. later, check each centroid as it's updated and set this flag if one has changed.
+			
 			for(ArrayList<Record> cluster : clusters)
 				cluster.clear(); //clear out the old clusters before we reassign every instance
 				
@@ -235,6 +239,10 @@ public class Kmeans {
 				//for each instance, measures distances to each centroid
 				for(int i = 0; i < centroids.length; i++) {
 					double dist = metric.distanceBetween(instance, centroids[i]);
+					if(Double.isNaN(dist)) {
+						System.out.println(centroids[i]);
+						System.exit(0);
+					}
 					if(shortest_dist_i == -1 || dist < shortest_dist) {
 						shortest_dist = dist;
 						shortest_dist_i = i;
@@ -244,45 +252,31 @@ public class Kmeans {
 				//chooses closest centroid and adds the instance to that cluster
 				clusters[shortest_dist_i].add(instance);
 			}
-			for(int i = 0; i < centroids.size(); i++) {
-				Record new_centroid = new Record();
+			
+			//creates new centroids by some sort of means measure
+			for(int i = 0; i < k; i++) {
+				for(int a = 0; a < instances.get(0).attributes.length; a++) {
+					double sum_a = 0;
+					for(Record r : clusters[i])
+						sum_a += r.attributes[a];
+						
+					//creates new centroids by some sort of means measure
+					if(centroids[i].attributes[a] != sum_a/clusters[i].size()) {
+						centroids_keep_changing = true;
+						centroids[i].attributes[a] = sum_a/clusters[i].size();
+					}
+					//System.out.println(sum_a);
+					//System.out.println("Centroid " + i + centroids[i]);
+				}
 				
-		
+				System.out.println(clusters[i].size());
+			}
 		}
 	
 		//what is this supposed to accomplish?
 		//it clusters the instances based on kmeans
 		//but what?
 		
-	}
-
-	//Loop through the data series and print them out in csv form.
-	static void printTables() {
-		for(Map.Entry<String, Class> className : classes.entrySet()) {
-			String precisionTables = "", recallTables = "", F1Tables = "";
-			System.out.println(className.getKey());
-
-			for(int k = 0; k < 5; k++) {
-				precisionTables += "k=" + (k*2+3) + ",";
-				recallTables += "k=" + (k*2+3) + ",";
-				F1Tables += "k=" + (k*2+3) + ",";
-				for(DistanceMetric dm : metrics) {
-					precisionTables += className.getValue().precision.getSeries(dm.getClass().getName().replaceAll("_"," ")).getY(k) + ",";
-					recallTables += className.getValue().recall.getSeries(dm.getClass().getName().replaceAll("_"," ")).getY(k) + ",";
-					F1Tables += className.getValue().Fmeasure.getSeries(dm.getClass().getName().replaceAll("_"," ")).getY(k) + ",";
-				}
-				precisionTables += "\n";
-				recallTables += "\n";
-				F1Tables += "\n";
-			}
-			
-			System.out.println("precision");
-			System.out.println(precisionTables);
-			System.out.println("recall");
-			System.out.println(recallTables);
-			System.out.println("F1");
-			System.out.println(F1Tables);
-		}
 	}
 	
 	//The following methods can be used if normalization is necessary.

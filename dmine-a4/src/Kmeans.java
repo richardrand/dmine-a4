@@ -273,9 +273,7 @@ public class Kmeans {
 			}
 		}
 	
-		//what is this supposed to accomplish?
-		//it clusters the instances based on kmeans
-		//but what?
+		
 		
 	}
 	
@@ -293,6 +291,70 @@ public class Kmeans {
 		}
 		System.out.println();
 		return result;
+	}
+	
+	//needed this for the BSS. Dunno if it's really necessary, 
+	//but since the centroid averaging was couched in the runKmeans loop
+	//I needed to pull something similar out.
+	static Record dataMidpoint(ArrayList<Record> instances){
+		
+		double sum_a;
+		Record result = new Record(instances.get(0).toString());
+		//there might be a more optimized way to create the result
+		//I just wanted to make sure changing the result wasn't changing anything
+		//in the instances array
+		
+		for (int a = 0; a < instances.get(0).attributes.length; a++){
+			sum_a = 0;
+			for (Record r : instances){
+				sum_a += r.attributes[a];
+			}
+			result.attributes[a] = sum_a/instances.size();
+		}
+		
+		return result;
+	}
+	
+	static double WSS(ArrayList<ArrayList> clusters, ArrayList<Record> midpoints, DistanceMetric metric){
+		
+		double sum1, sum2 = 0;
+		
+		System.out.print("WSS for this clustering: ");
+		//for the ith cluster
+		for (int i = 0; i < clusters.size(); i++){
+			//for each record in that cluster
+			for (Record r : clusters.get(i)){
+				//sum the square of the distance between record and the cluster's midpoint
+				sum1 += metric.distanceBetween(r,midpoints.get(i)) * metric.distanceBetween(r,midpoints.get(i));
+			}
+			sum2 += sum1;
+		}
+		
+		System.out.print(sum2 + ".");
+		System.out.println();
+		
+		return sum2;
+	}
+	
+	static double BSS(ArrayList<ArrayList> clusters, ArrayList<Record> midpoints, DistanceMetric metric){
+		
+		double sum = 0;
+		double size = 0;
+		Record midpoint; 
+		
+		System.out.print("BSS for this clutering: ");
+		//for the ith cluster
+		for (int i = 0; i < clusters.size(); i++){
+			
+			size = clusters.get(i).size();
+			midpoint = dataMidpoint(clusters.get(i));
+			//sum the product of the size and the squared distance between the cluster's midpoint and the absolute midpoint
+			sum1 += size * metric.distanceBetween(midpoints.get(i),midpoint) * metric.distanceBetween(midpoints.get(i),midpoint);
+		}
+		
+		System.out.print(sum + ".");
+		System.out.println();
+		return sum;
 	}
 	
 	static double lg(double x) {

@@ -166,7 +166,7 @@ public class Kmeans {
 			//Parse files
 			ArrayList<Record> instances = parseArff(file);
 			int classCount = classes.size();
-			System.out.printf("Train stats: %d instances, %d attributes, %d classes\n", instances.size(), instances.get(0).attributes.length, classCount);
+			System.out.printf("Train stats: %d instances, %d attributes, %d classes, %f entropy\n", instances.size(), instances.get(0).attributes.length, classCount, entropy(instances));
 			
 			for(DistanceMetric metric : metrics) 
 				for(int k = 1; k <= 1; k++)
@@ -269,7 +269,7 @@ public class Kmeans {
 					//System.out.println("Centroid " + i + centroids[i]);
 				}
 				
-				System.out.println(clusters[i].size());
+				System.out.println(entropy(clusters[i]));
 			}
 		}
 	
@@ -279,6 +279,26 @@ public class Kmeans {
 		
 	}
 	
+	static double entropy(ArrayList<Record> cluster) {
+		double result = 0;
+		System.out.print("matches for this cluster per class: ");
+		for(String className : Kmeans.classes.keySet()) {
+			int matches = 0;
+			for(Record instance : cluster)
+				if(instance.classname.equals(className))
+					matches++;
+			double x = ((double)matches)/cluster.size();
+			result -= x*lg(x);
+			System.out.print(matches + " ");
+		}
+		System.out.println();
+		return result;
+	}
+	
+	static double lg(double x) {
+		if(x == 0) return 0;
+		return Math.log(x)/Math.log(2);
+	}
 	//The following methods can be used if normalization is necessary.
 	static void altMinMaxNorm(ArrayList<Record> tests, ArrayList<Record> trains) {
 		int numAttribs = tests.get(0).attributes.length;

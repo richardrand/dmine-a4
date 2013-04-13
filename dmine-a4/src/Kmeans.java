@@ -186,32 +186,31 @@ public class Kmeans {
 		Record randomSelection;
 		
 		//we will be able to treat the centroids as records
-		ArrayList<Record> centroids = new ArrayList<Record>();
+		Records[] centroids = new Record[k];
 		
 		//this will hold an instance's distances to each centroid
-		ArrayList<Double> thisInstanceDist = new ArrayList<Double>();
+		double[] thisInstanceDist = new double[k];
 		
 		//this will hold all of the clusters
-		ArrayList<ArrayList> clusters = new ArrayList<ArrayList>();
+		ArrayList[] clusters = new ArrayList[k];
 		
 		//creates k initial centroids
 		for (int i = 0; i < k; i++){
-			//pick a random index, has to be inside of the array
-			while(rand >= instances.size()){
-				rand = (int)(Math.random() * 100.0);
-			}
+			//pick a random index inside of the array
+			rand = Math.nextInt(instances.size());
+			
 			//choosing initial centroids from data might not be smart, but I think it's the only way
 			//since we don't know what the attributes look like
+			//--actually i think that's how kmeans is normally done anyway
 			randomSelection = instances.get(rand);
 			
 			//adds the selection to the list of centroids
-			centroids.add(randomSelection);
-			
+			centroids[k] = randomSelection;
 			//adds a new cluster to the list of clusters
-			clusters.add(new ArrayList<Record>());
-			
+			clusters[k] = new ArrayList<Record>();
 			//adds the centroid to that cluster
-			clusters.get(0).add(randomSelection);
+			//the following step will be done automatically  in the kmeans loop
+			//clusters.get(i).add(randomSelection);
 		}
 		
 		//this is the actual kmeans algorithm
@@ -224,7 +223,15 @@ public class Kmeans {
 		//creates new centroids by some sort of means measure
 		//reiterate
 		boolean centroids_keep_changing = true;
-		while(centroids_keep_changing){
+		while(centroids_keep_changing) {
+			for(Record instance : instances) {
+				//for each instance, measures distances to each centroid
+				for(int i = 0; i < centroids.size(); i++) {
+					thisInstanceDist.set(i,  
+			}
+			for(int i = 0; i < centroids.size(); i++) {
+				Record new_centroid = new Record();
+				
 		
 		}
 	

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Comparator;
 import java.util.Collections;
+import java.util.Random;
 import java.text.DecimalFormat;
 import javax.swing.JPanel;
 import java.awt.GridLayout;
@@ -186,18 +187,19 @@ public class Kmeans {
 		Record randomSelection;
 		
 		//we will be able to treat the centroids as records
-		Records[] centroids = new Record[k];
+		Record[] centroids = new Record[k];
 		
 		//this will hold an instance's distances to each centroid
 		double[] thisInstanceDist = new double[k];
 		
 		//this will hold all of the clusters
-		ArrayList[] clusters = new ArrayList[k];
+		ArrayList<Record>[] clusters = new ArrayList<Record>[k];
 		
+		Random rnd = new Random();
 		//creates k initial centroids
 		for (int i = 0; i < k; i++){
 			//pick a random index inside of the array
-			rand = Math.nextInt(instances.size());
+			rand = rnd.nextInt(instances.size());
 			
 			//choosing initial centroids from data might not be smart, but I think it's the only way
 			//since we don't know what the attributes look like
@@ -224,10 +226,23 @@ public class Kmeans {
 		//reiterate
 		boolean centroids_keep_changing = true;
 		while(centroids_keep_changing) {
+			for(ArrayList<Record> cluster : clusters)
+				cluster.clear(); //clear out the old clusters before we reassign every instance
+				
 			for(Record instance : instances) {
+				double shortest_dist = 0;
+				int shortest_dist_i = -1;
 				//for each instance, measures distances to each centroid
-				for(int i = 0; i < centroids.size(); i++) {
-					thisInstanceDist.set(i,  
+				for(int i = 0; i < centroids.length; i++) {
+					double dist = metric.distanceBetween(instance, centroids[i]);
+					if(shortest_dist_i == -1 || dist < shortest_dist) {
+						shortest_dist = dist;
+						shortest_dist_i = i;
+					}
+					thisInstanceDist[i] = dist; 
+				}
+				//chooses closest centroid and adds the instance to that cluster
+				clusters[shortest_dist_i].add(instance);
 			}
 			for(int i = 0; i < centroids.size(); i++) {
 				Record new_centroid = new Record();

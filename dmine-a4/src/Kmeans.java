@@ -274,9 +274,10 @@ public class Kmeans {
 				}
 				
 				System.out.println(entropy(clusters[i]));
-				System.out.println(WSS(clusters[i],centroids,metric));
-				System.
+				
+				
 			}
+			System.out.println(WSS(clusters,centroids,metric));
 		}
 	
 		
@@ -321,15 +322,15 @@ public class Kmeans {
 		return result;
 	}
 	
-	static double WSS(ArrayList<ArrayList> clusters, Record[] midpoints, DistanceMetric metric){
+	static double WSS(ArrayList<Record>[] clusters, Record[] midpoints, DistanceMetric metric){
 		
-		double sum1, sum2 = 0;
+		double sum1 = 0, sum2 = 0;
 		
 		System.out.print("WSS for this clustering: ");
 		//for the ith cluster
-		for (int i = 0; i < clusters.size(); i++){
+		for (int i = 0; i < clusters.length; i++){
 			//for each record in that cluster
-			for (Record r : clusters.get(i)){
+			for (Record r : clusters[i]){
 				//sum the square of the distance between record and the cluster's midpoint
 				sum1 += metric.distanceBetween(r,midpoints[i]) * metric.distanceBetween(r,midpoints[i]);
 			}
@@ -342,7 +343,7 @@ public class Kmeans {
 		return sum2;
 	}
 	
-	static double BSS(ArrayList<ArrayList> clusters, Record[] midpoints, DistanceMetric metric){
+	static double BSS(ArrayList<Record>[] clusters, Record[] midpoints, DistanceMetric metric){
 		
 		double sum = 0;
 		double size = 0;
@@ -350,10 +351,10 @@ public class Kmeans {
 		
 		System.out.print("BSS for this clutering: ");
 		//for the ith cluster
-		for (int i = 0; i < clusters.size(); i++){
+		for (int i = 0; i < clusters.length; i++){
 			
-			size = clusters.get(i).size();
-			midpoint = dataMidpoint(clusters.get(i));
+			size = clusters[i].size();
+			midpoint = dataMidpoint(clusters[i]);
 			//sum the product of the size and the squared distance between the cluster's midpoint and the absolute midpoint
 			sum += size * metric.distanceBetween(midpoints[i],midpoint) * metric.distanceBetween(midpoints[i],midpoint);
 		}

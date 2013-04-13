@@ -163,8 +163,8 @@ public class Kmeans {
 			int classCount = classes.size();
 			System.out.printf("Train stats: %d instances, %d attributes, %d classes\n", instances.size(), instances.get(0).attributes.length, classCount);
 			
-			for(DistanceMetric metric : metrics)
-				for(int k = 1; k++; k <= 3)
+			for(DistanceMetric metric : metrics) 
+				for(int k = 1; k <= 3; k++)
 					runKmeans(instances, k*classCount, metric);
 			
 			//Print tables to stdout
@@ -177,20 +177,61 @@ public class Kmeans {
 	}
 
 	static void runKmeans(ArrayList<Record> instances, int k, DistanceMetric metric) {
-		boolean centroids_different = true;
+	
+		//I'm writing a lot that I feel is redundant
+		//might be smarter to write a method that does the clustering 
+		//and just do the initial clustering here and then run the reclustering method
 		
-		while(centroids_same) {
-			for(int i = 0; i < k; i++) {
-				
+		int rand = 0;
+		Record randomSelection;
+		
+		//we will be able to treat the centroids as records
+		ArrayList<Record> centroids = new ArrayList<Record>();
+		
+		//this will hold an instance's distances to each centroid
+		ArrayList<Double> thisInstanceDist = new ArrayList<Double>();
+		
+		//this will hold all of the clusters
+		ArrayList<ArrayList> clusters = new ArrayList<ArrayList>();
+		
+		//creates k initial centroids
+		for (int i = 0; i < k; i++){
+			//pick a random index, has to be inside of the array
+			while(rand >= instances.size()){
+				rand = (int)(Math.random() * 100.0);
 			}
+			//choosing initial centroids from data might not be smart, but I think it's the only way
+			//since we don't know what the attributes look like
+			randomSelection = instances.get(rand);
 			
-			//recalculate and keep checking if centroids are the same
-			for every cluster {
-			calculate centroid  (assign to C)
-			if C==L (centroids_different = false)
-			L = C;
-			}
+			//adds the selection to the list of centroids
+			centroids.add(randomSelection);
+			
+			//adds a new cluster to the list of clusters
+			clusters.add(new ArrayList<Record>());
+			
+			//adds the centroid to that cluster
+			clusters.get(0).add(randomSelection);
 		}
+		
+		//this is the actual kmeans algorithm
+		//runs while centroids are changing
+		//checks if all old centroids are same as new centroids, if so false
+		//will run once more
+		//for each instance, measures distances to each centroid
+		//chooses closest centroid and adds the instance to that cluster
+		//stores old centroids in an ArrayList
+		//creates new centroids by some sort of means measure
+		//reiterate
+		boolean centroids_keep_changing = true;
+		while(centroids_keep_changing){
+		
+		}
+	
+		//what is this supposed to accomplish?
+		//it clusters the instances based on kmeans
+		//but what?
+		
 	}
 
 	//Loop through the data series and print them out in csv form.

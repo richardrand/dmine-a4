@@ -1,10 +1,12 @@
 import java.io.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Scanner;
 import java.text.DecimalFormat;
 import javax.swing.JPanel;
 import java.awt.GridLayout;
@@ -145,14 +147,16 @@ public class Kmeans {
 	}
 	
 	public static void main(String[] args) throws IOException {
+		Scanner kboard = new Scanner(System.in);
+		
 		System.out.print("Type i to run on (i)ris, a to run on (a)ll genes, s for (s)ignificant genes, or return to enter a custom pair of filenames: ");
-		String test = System.console().readLine();
+		String test = kboard.nextLine();
 		if(test.equals("i")) {
-			cluster("iris.arff");
+			cluster("data/iris.arff");
 		} else if(test.equals("a")) {
-			cluster("AllGenes.arff");
+			cluster("data/AllGenes.arff");
 		} else if(test.equals("s")) {
-			cluster("SigGenes.arff");
+			cluster("data/SigGene.arff");
 		} else {
 			System.out.println("Name of input file: ");
 			cluster(System.console().readLine());
@@ -270,6 +274,8 @@ public class Kmeans {
 				}
 				
 				System.out.println(entropy(clusters[i]));
+				System.out.println(WSS(clusters[i],centroids,metric));
+				System.
 			}
 		}
 	
@@ -315,7 +321,7 @@ public class Kmeans {
 		return result;
 	}
 	
-	static double WSS(ArrayList<ArrayList> clusters, ArrayList<Record> midpoints, DistanceMetric metric){
+	static double WSS(ArrayList<ArrayList> clusters, Record[] midpoints, DistanceMetric metric){
 		
 		double sum1, sum2 = 0;
 		
@@ -325,7 +331,7 @@ public class Kmeans {
 			//for each record in that cluster
 			for (Record r : clusters.get(i)){
 				//sum the square of the distance between record and the cluster's midpoint
-				sum1 += metric.distanceBetween(r,midpoints.get(i)) * metric.distanceBetween(r,midpoints.get(i));
+				sum1 += metric.distanceBetween(r,midpoints[i]) * metric.distanceBetween(r,midpoints[i]);
 			}
 			sum2 += sum1;
 		}
@@ -336,7 +342,7 @@ public class Kmeans {
 		return sum2;
 	}
 	
-	static double BSS(ArrayList<ArrayList> clusters, ArrayList<Record> midpoints, DistanceMetric metric){
+	static double BSS(ArrayList<ArrayList> clusters, Record[] midpoints, DistanceMetric metric){
 		
 		double sum = 0;
 		double size = 0;
@@ -349,7 +355,7 @@ public class Kmeans {
 			size = clusters.get(i).size();
 			midpoint = dataMidpoint(clusters.get(i));
 			//sum the product of the size and the squared distance between the cluster's midpoint and the absolute midpoint
-			sum1 += size * metric.distanceBetween(midpoints.get(i),midpoint) * metric.distanceBetween(midpoints.get(i),midpoint);
+			sum += size * metric.distanceBetween(midpoints[i],midpoint) * metric.distanceBetween(midpoints[i],midpoint);
 		}
 		
 		System.out.print(sum + ".");

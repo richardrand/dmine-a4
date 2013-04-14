@@ -146,13 +146,13 @@ public class Kmeans {
 	
 	public static void main(String[] args) throws IOException {
 		System.out.print("Type i to run on (i)ris, a to run on (a)ll genes, s for (s)ignificant genes, or return to enter a custom pair of filenames: ");
-		String test = System.console().readLine();
+		String test = "i";//System.console().readLine();
 		if(test.equals("i")) {
-			cluster("iris.arff");
+			cluster("data/iris.arff");
 		} else if(test.equals("a")) {
-			cluster("AllGenes.arff");
+			cluster("data/AllGenes.arff");
 		} else if(test.equals("s")) {
-			cluster("SigGene.arff");
+			cluster("data/SigGene.arff");
 		} else {
 			System.out.println("Name of input file: ");
 			cluster(System.console().readLine());

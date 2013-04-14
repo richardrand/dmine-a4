@@ -152,7 +152,7 @@ public class Kmeans {
 		} else if(test.equals("a")) {
 			cluster("AllGenes.arff");
 		} else if(test.equals("s")) {
-			cluster("SigGenes.arff");
+			cluster("SigGene.arff");
 		} else {
 			System.out.println("Name of input file: ");
 			cluster(System.console().readLine());
@@ -179,7 +179,6 @@ public class Kmeans {
 	}
 
 	static void runKmeans(ArrayList<Record> instances, int k, DistanceMetric metric) {
-		System.out.println("ghfthfyh");
 		//I'm writing a lot that I feel is redundant
 		//might be smarter to write a method that does the clustering 
 		//and just do the initial clustering here and then run the reclustering method
@@ -227,7 +226,6 @@ public class Kmeans {
 		//reiterate
 		boolean centroids_keep_changing = true;
 		while(centroids_keep_changing) {
-			System.out.println("go");
 			centroids_keep_changing = false; //assume centroids haven't changed. later, check each centroid as it's updated and set this flag if one has changed.
 			
 			for(ArrayList<Record> cluster : clusters)
@@ -269,7 +267,7 @@ public class Kmeans {
 					//System.out.println("Centroid " + i + centroids[i]);
 				}
 				
-				System.out.println(entropy(clusters[i]));
+				System.out.println("entropy for this cluster" + entropy(clusters[i]));
 			}
 		}
 	

@@ -5,9 +5,6 @@ import java.util.Map;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.Random;
-import java.text.DecimalFormat;
-import javax.swing.JPanel;
-import java.awt.GridLayout;
 
 class Class {};
 
@@ -172,7 +169,8 @@ public class Kmeans {
 				System.out.println(metric.getClass().getName() + " distance");
 				for(int k = 1; k <= 3; k++) {
 					System.out.println("k = " + (k*classCount));
-					while(!runKmeans(instances, k*classCount, metric));
+					while(!runKmeans(instances, k*classCount, metric))
+						System.out.println("Trying agains");
 				}
 			}
 
@@ -211,7 +209,8 @@ public class Kmeans {
 			randomSelection = instances.get(rand);
 			System.out.println(randomSelection);
 			//adds the selection to the list of centroids
-			centroids[i] = randomSelection;
+			centroids[i] = new Record(randomSelection.attributes.length);
+			centroids[i].attributes = randomSelection.attributes.clone();
 			//adds a new cluster to the list of clusters
 			clusters[i] = new ArrayList<Record>();
 			//adds the centroid to that cluster
@@ -243,7 +242,7 @@ public class Kmeans {
 				for(int i = 0; i < centroids.length; i++) {
 					double dist = metric.distanceBetween(instance, centroids[i]);
 					if(Double.isNaN(dist)) {
-						System.out.println("This run failed. Trying again.\n");
+						System.out.println("instance: " + instance + " centroid: " + centroids[i]);
 						System.exit(0);
 						return false;
 					}
@@ -271,6 +270,12 @@ public class Kmeans {
 						centroids_keep_changing = true;
 						//System.out.println("oops " + sum_a/clusters[i].size() + " != " + centroids[i].attributes[a]);
 						centroids[i].attributes[a] = sum_a/clusters[i].size();
+					}
+					
+					if(clusters[i].size() == 0) {
+						System.out.println("Empty cluster");
+						return false;
+						//System.exit(0);
 					}
 					//System.out.println(sum_a);
 					//System.out.println("Centroid " + i + centroids[i]);

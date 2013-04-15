@@ -1,12 +1,10 @@
 import java.io.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.Random;
-import java.util.Scanner;
 import java.text.DecimalFormat;
 import javax.swing.JPanel;
 import java.awt.GridLayout;
@@ -147,10 +145,8 @@ public class Kmeans {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		Scanner kboard = new Scanner(System.in);
-		
 		System.out.print("Type i to run on (i)ris, a to run on (a)ll genes, s for (s)ignificant genes, or return to enter a custom pair of filenames: ");
-		String test = kboard.nextLine();
+		String test = "i";//System.console().readLine();
 		if(test.equals("i")) {
 			cluster("iris.arff");
 		} else if(test.equals("a")) {
@@ -183,7 +179,6 @@ public class Kmeans {
 	}
 
 	static void runKmeans(ArrayList<Record> instances, int k, DistanceMetric metric) {
-		System.out.println("ghfthfyh");
 		//I'm writing a lot that I feel is redundant
 		//might be smarter to write a method that does the clustering 
 		//and just do the initial clustering here and then run the reclustering method
@@ -231,7 +226,6 @@ public class Kmeans {
 		//reiterate
 		boolean centroids_keep_changing = true;
 		while(centroids_keep_changing) {
-			System.out.println("go");
 			centroids_keep_changing = false; //assume centroids haven't changed. later, check each centroid as it's updated and set this flag if one has changed.
 			
 			for(ArrayList<Record> cluster : clusters)
@@ -273,14 +267,14 @@ public class Kmeans {
 					//System.out.println("Centroid " + i + centroids[i]);
 				}
 				
-				System.out.println(entropy(clusters[i]));
-				
-				
+				System.out.println("entropy for this cluster" + entropy(clusters[i]));
 			}
 			System.out.println(WSS(clusters,centroids,metric));
 		}
 	
-		
+		//what is this supposed to accomplish?
+		//it clusters the instances based on kmeans
+		//but what?
 		
 	}
 	

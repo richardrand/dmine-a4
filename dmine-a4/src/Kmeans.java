@@ -152,11 +152,11 @@ public class Kmeans {
 		System.out.print("Type i to run on (i)ris, a to run on (a)ll genes, s for (s)ignificant genes, or return to enter a custom pair of filenames: ");
 		String test = kboard.nextLine();
 		if(test.equals("i")) {
-			cluster("data/iris.arff");
+			cluster("iris.arff");
 		} else if(test.equals("a")) {
-			cluster("data/AllGenes.arff");
+			cluster("AllGenes.arff");
 		} else if(test.equals("s")) {
-			cluster("data/SigGene.arff");
+			cluster("SigGene.arff");
 		} else {
 			System.out.println("Name of input file: ");
 			cluster(System.console().readLine());

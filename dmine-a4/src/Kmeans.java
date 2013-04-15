@@ -270,6 +270,7 @@ public class Kmeans {
 				System.out.println("entropy for this cluster" + entropy(clusters[i]));
 			}
 			System.out.println(WSS(clusters,centroids,metric));
+			System.out.println(BSS(clusters, centroids, metric));
 		}
 	
 		//what is this supposed to accomplish?
@@ -297,20 +298,20 @@ public class Kmeans {
 	//needed this for the BSS. Dunno if it's really necessary, 
 	//but since the centroid averaging was couched in the runKmeans loop
 	//I needed to pull something similar out.
-	static Record dataMidpoint(ArrayList<Record> instances){
+	static Record dataMidpoint(Record[] instances){
 		
 		double sum_a;
-		Record result = new Record(instances.get(0).toString());
+		Record result = new Record(instances[0].toString());
 		//there might be a more optimized way to create the result
 		//I just wanted to make sure changing the result wasn't changing anything
 		//in the instances array
 		
-		for (int a = 0; a < instances.get(0).attributes.length; a++){
+		for (int a = 0; a < instances[0].attributes.length; a++){
 			sum_a = 0;
 			for (Record r : instances){
 				sum_a += r.attributes[a];
 			}
-			result.attributes[a] = sum_a/instances.size();
+			result.attributes[a] = sum_a/instances.length;
 		}
 		
 		return result;
@@ -348,7 +349,7 @@ public class Kmeans {
 		for (int i = 0; i < clusters.length; i++){
 			
 			size = clusters[i].size();
-			midpoint = dataMidpoint(clusters[i]);
+			midpoint = dataMidpoint(midpoints);
 			//sum the product of the size and the squared distance between the cluster's midpoint and the absolute midpoint
 			sum += size * metric.distanceBetween(midpoints[i],midpoint) * metric.distanceBetween(midpoints[i],midpoint);
 		}

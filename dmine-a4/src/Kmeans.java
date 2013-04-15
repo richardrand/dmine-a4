@@ -169,9 +169,11 @@ public class Kmeans {
 			System.out.printf("Train stats: %d instances, %d attributes, %d classes, %f entropy\n", instances.size(), instances.get(0).attributes.length, classCount, entropy(instances));
 			
 			for(DistanceMetric metric : metrics) {
-				System.out.println(metric.getClass().getName());
-				for(int k = 1; k <= 1; k++)
-					runKmeans(instances, k*classCount, metric);
+				System.out.println(metric.getClass().getName() + " distance");
+				for(int k = 1; k <= 3; k++) {
+					System.out.println("k = " + (k*classCount));
+					while(!runKmeans(instances, k*classCount, metric));
+				}
 			}
 
 		} catch (FileNotFoundException e) {
@@ -180,7 +182,7 @@ public class Kmeans {
 		}
 	}
 
-	static void runKmeans(ArrayList<Record> instances, int k, DistanceMetric metric) {
+	static boolean runKmeans(ArrayList<Record> instances, int k, DistanceMetric metric) {
 		//I'm writing a lot that I feel is redundant
 		//might be smarter to write a method that does the clustering 
 		//and just do the initial clustering here and then run the reclustering method
@@ -241,8 +243,9 @@ public class Kmeans {
 				for(int i = 0; i < centroids.length; i++) {
 					double dist = metric.distanceBetween(instance, centroids[i]);
 					if(Double.isNaN(dist)) {
-						System.out.println(centroids[i]);
+						System.out.println("This run failed. Trying again.\n");
 						System.exit(0);
+						return false;
 					}
 					if(shortest_dist_i == -1 || dist < shortest_dist) {
 						shortest_dist = dist;
@@ -286,6 +289,8 @@ public class Kmeans {
 			System.out.println("BSS + WSS: " + (wss+bss));
 			System.out.println();
 		}
+		
+		return true; //Succeeded
 	}
 	
 	static double entropy(ArrayList<Record> cluster) {

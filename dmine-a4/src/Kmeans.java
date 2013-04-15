@@ -168,9 +168,11 @@ public class Kmeans {
 			int classCount = classes.size();
 			System.out.printf("Train stats: %d instances, %d attributes, %d classes, %f entropy\n", instances.size(), instances.get(0).attributes.length, classCount, entropy(instances));
 			
-			for(DistanceMetric metric : metrics) 
+			for(DistanceMetric metric : metrics) {
+				System.out.println(metric.getClass().getName());
 				for(int k = 1; k <= 1; k++)
 					runKmeans(instances, k*classCount, metric);
+			}
 
 		} catch (FileNotFoundException e) {
 			System.err.println("File not found");
@@ -230,9 +232,9 @@ public class Kmeans {
 			
 			for(ArrayList<Record> cluster : clusters)
 				cluster.clear(); //clear out the old clusters before we reassign every instance
-				
+			
 			for(Record instance : instances) {
-				double shortest_dist = 0;
+				double shortest_dist = Double.POSITIVE_INFINITY;
 				int shortest_dist_i = -1;
 				//for each instance, measures distances to each centroid
 				for(int i = 0; i < centroids.length; i++) {
@@ -267,15 +269,16 @@ public class Kmeans {
 					//System.out.println("Centroid " + i + centroids[i]);
 				}
 				
-				System.out.println("entropy for this cluster" + entropy(clusters[i]));
+				System.out.println("entropy for this cluster: " + entropy(clusters[i]));
 			}
-			System.out.println(WSS(clusters,centroids,metric));
+			
+			double wss = WSS(clusters, centroids, metric);
+			double bss = BSS(clusters, centroids, metric);
+			System.out.println("WSS for this clustering: " + wss);
+			System.out.println("BSS for this clutering: " + bss);
+			System.out.println("BSS + WSS: " + (wss+bss));
+			System.out.println();
 		}
-	
-		//what is this supposed to accomplish?
-		//it clusters the instances based on kmeans
-		//but what?
-		
 	}
 	
 	static double entropy(ArrayList<Record> cluster) {
@@ -297,20 +300,19 @@ public class Kmeans {
 	//needed this for the BSS. Dunno if it's really necessary, 
 	//but since the centroid averaging was couched in the runKmeans loop
 	//I needed to pull something similar out.
-	static Record dataMidpoint(ArrayList<Record> instances){
-		
+	static Record dataMidpoint(Record[] instances){		
 		double sum_a;
-		Record result = new Record(instances.get(0).toString());
+		Record result = new Record(instances[0].attributes.length);
 		//there might be a more optimized way to create the result
 		//I just wanted to make sure changing the result wasn't changing anything
 		//in the instances array
 		
-		for (int a = 0; a < instances.get(0).attributes.length; a++){
+		for (int a = 0; a < instances[0].attributes.length; a++){
 			sum_a = 0;
-			for (Record r : instances){
+			for (Record r : instances) {
 				sum_a += r.attributes[a];
 			}
-			result.attributes[a] = sum_a/instances.size();
+			result.attributes[a] = sum_a/instances.length;
 		}
 		
 		return result;
@@ -318,43 +320,30 @@ public class Kmeans {
 	
 	static double WSS(ArrayList<Record>[] clusters, Record[] midpoints, DistanceMetric metric){
 		
-		double sum1 = 0, sum2 = 0;
+		double sum = 0;
 		
-		System.out.print("WSS for this clustering: ");
 		//for the ith cluster
 		for (int i = 0; i < clusters.length; i++){
 			//for each record in that cluster
 			for (Record r : clusters[i]){
 				//sum the square of the distance between record and the cluster's midpoint
-				sum1 += metric.distanceBetween(r,midpoints[i]) * metric.distanceBetween(r,midpoints[i]);
+				sum += metric.distanceBetween(r, midpoints[i]) * metric.distanceBetween(r, midpoints[i]);
 			}
-			sum2 += sum1;
 		}
 		
-		System.out.print(sum2 + ".");
-		System.out.println();
-		
-		return sum2;
+		return sum;
 	}
 	
-	static double BSS(ArrayList<Record>[] clusters, Record[] midpoints, DistanceMetric metric){
-		
+	static double BSS(ArrayList<Record>[] clusters, Record[] midpoints, DistanceMetric metric) {
 		double sum = 0;
-		double size = 0;
-		Record midpoint; 
-		
-		System.out.print("BSS for this clutering: ");
+		Record midpoint = dataMidpoint(midpoints);
+
 		//for the ith cluster
 		for (int i = 0; i < clusters.length; i++){
-			
-			size = clusters[i].size();
-			midpoint = dataMidpoint(clusters[i]);
 			//sum the product of the size and the squared distance between the cluster's midpoint and the absolute midpoint
-			sum += size * metric.distanceBetween(midpoints[i],midpoint) * metric.distanceBetween(midpoints[i],midpoint);
+			sum += clusters[i].size() * metric.distanceBetween(midpoints[i],midpoint) * metric.distanceBetween(midpoints[i],midpoint);
 		}
 		
-		System.out.print(sum + ".");
-		System.out.println();
 		return sum;
 	}
 	

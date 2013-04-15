@@ -269,11 +269,13 @@ public class Kmeans {
 					//System.out.println("Centroid " + i + centroids[i]);
 				}
 				
-				System.out.println("entropy for this cluster: " + entropy(clusters[i]));
+				//System.out.println("entropy for this cluster: " + entropy(clusters[i]));
 			}
+			Record[] example = new Record[instances.size()];
+			Record[] dataSet = instances.toArray(example);
 			
 			double wss = WSS(clusters, centroids, metric);
-			double bss = BSS(clusters, centroids, metric);
+			double bss = BSS(dataSet, clusters, centroids, metric);
 			System.out.println("WSS for this clustering: " + wss);
 			System.out.println("BSS for this clutering: " + bss);
 			System.out.println("BSS + WSS: " + (wss+bss));
@@ -334,9 +336,9 @@ public class Kmeans {
 		return sum;
 	}
 	
-	static double BSS(ArrayList<Record>[] clusters, Record[] midpoints, DistanceMetric metric) {
+	static double BSS(Record[] entireDataset, ArrayList<Record>[] clusters, Record[] midpoints, DistanceMetric metric) {
 		double sum = 0;
-		Record midpoint = dataMidpoint(midpoints);
+		Record midpoint = dataMidpoint(entireDataset);
 
 		//for the ith cluster
 		for (int i = 0; i < clusters.length; i++){

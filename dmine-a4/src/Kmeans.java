@@ -146,7 +146,7 @@ public class Kmeans {
 	
 	public static void main(String[] args) throws IOException {
 		System.out.print("Type i to run on (i)ris, a to run on (a)ll genes, s for (s)ignificant genes, or return to enter a custom pair of filenames: ");
-		String test = "i";//System.console().readLine();
+		String test = "s";//System.console().readLine();
 		if(test.equals("i")) {
 			cluster("iris.arff");
 		} else if(test.equals("a")) {
@@ -233,6 +233,7 @@ public class Kmeans {
 			for(ArrayList<Record> cluster : clusters)
 				cluster.clear(); //clear out the old clusters before we reassign every instance
 			
+			System.out.println("Instance clusters: ");
 			for(Record instance : instances) {
 				double shortest_dist = Double.POSITIVE_INFINITY;
 				int shortest_dist_i = -1;
@@ -249,9 +250,11 @@ public class Kmeans {
 					}
 					thisInstanceDist[i] = dist; 
 				}
+				System.out.print(shortest_dist_i + " ");
 				//chooses closest centroid and adds the instance to that cluster
 				clusters[shortest_dist_i].add(instance);
 			}
+			System.out.println();
 			
 			//creates new centroids by some sort of means measure
 			for(int i = 0; i < k; i++) {
@@ -263,13 +266,15 @@ public class Kmeans {
 					//creates new centroids by some sort of means measure
 					if(centroids[i].attributes[a] != sum_a/clusters[i].size()) {
 						centroids_keep_changing = true;
+						//System.out.println("oops " + sum_a/clusters[i].size() + " != " + centroids[i].attributes[a]);
 						centroids[i].attributes[a] = sum_a/clusters[i].size();
 					}
 					//System.out.println(sum_a);
 					//System.out.println("Centroid " + i + centroids[i]);
 				}
 				
-				//System.out.println("entropy for this cluster: " + entropy(clusters[i]));
+				System.out.println("centroid for this cluster: " + centroids[i]);
+				System.out.println("entropy for this cluster: " + entropy(clusters[i]));
 			}
 			Record[] example = new Record[instances.size()];
 			Record[] dataSet = instances.toArray(example);

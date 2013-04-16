@@ -440,4 +440,16 @@ public class Kmeans {
 				r.attributes[i] = (r.attributes[i] - mean)/stddev;
 		}
 	}
+	
+	static void printToFile(String in) throws IOException{
+		try{
+		OutputStream output = new FileOutputStream("output.txt");
+		PrintStream printer = new PrintStream(output);
+		printer.println(in);
+		}catch(FileNotFoundException e){//do nothing, this shouldn't happen}
+			}
+		}
+		
+		
+	}
 }
